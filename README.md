@@ -5,17 +5,19 @@ Projeto de automação no site https://www.trivago.com.br/, utilizando a linguag
 
 ## Feature testada:
 
-Funcionalidade: Buscar por um local 
-  Como um usuário 
-  Desejo consultar um local 
-  Para que eu possa visualizar os dados completos do local que estou buscando
+**Funcionalidade:** Buscar por um local <br>
+  _Como um usuário_ <br>
+  _Desejo consultar um local_ <br>
+  _Para que eu possa visualizar os dados completos do local que estou buscando_ <br>
 
-  Cenário: Buscar por hotéis em Manaus com uma boa avaliação e preço
-      Dado que eu acesse o site da Trivago
-      Quando eu solicito pesquisar pelo destino "Manaus"
-      E ordeno a pesquisa por "Avaliação e sugestões"
-      Então eu vejo os dados do primeiro item da lista
+  **Cenário:** Buscar por hotéis em Manaus com uma boa avaliação e preço <br>
+      Dado que eu acesse o site da Trivago <br>
+      Quando eu solicito pesquisar pelo destino "Manaus" <br>
+      E ordeno a pesquisa por "Avaliação e sugestões"<br>
+      Então eu vejo os dados do primeiro item da lista<br>
+      
         | Nome             | Avaliação | Valor |
+        | ---------------- | --------- | ----- |
         | Sleep Inn Manaus | 3         | R$138 |
 
 
