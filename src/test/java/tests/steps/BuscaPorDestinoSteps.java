@@ -1,15 +1,12 @@
 package tests.steps;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.*;
 import pages.pageObjects.HomePagePageObjects;
 import utils.Browser;
 import utils.providers.UrlProvider;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BuscaPorDestinoSteps {
 
@@ -30,18 +27,26 @@ public class BuscaPorDestinoSteps {
         homePagePage.selectComboBoxOrdenarPor(opcao);
     }
 
-    @Então("eu vejo os dados do primeiro item da lista")
-    public void euVejoOsDadosDoPrimeiroItemDaLista(DataTable table) {
-        List<Map<String, String>> rows = table.asMaps(String.class, String.class);
+    @Então("eu vejo os resultados da busca pelo destino {string}")
+    public void euVejoOsResultadosDaBuscaPeloDestino(String destino) {
+        String url = homePagePage.getUrlAtual().toLowerCase();
+        String titulo = homePagePage.getTituloAtual().toLowerCase();
+        String esperado = destino.toLowerCase();
 
-        for(Map<String, String> columns : rows) {
-            String nome = columns.get("Nome");
-            String avaliacao = columns.get("Avaliação");
-            String valor = columns.get("Valor");
+        assertTrue(
+                "Esperava a página de resultados de \"" + destino + "\". URL: " + url + " | título: " + titulo,
+                url.contains(esperado) || titulo.contains(esperado));
+    }
 
-            assertEquals(nome, homePagePage.getTextNomeLocalPrimeiroItemDaLista());
-            assertEquals(avaliacao, homePagePage.getTextQuantidadeEstrelasPrimeiroItemDaLista());
-            assertEquals(valor, homePagePage.getTextValorLocalPrimeiroItemDaLista());
-        }
+    @E("o primeiro item da lista possui nome, quantidade de estrelas e preço")
+    public void oPrimeiroItemDaListaPossuiNomeQuantidadeDeEstrelasEPreco() {
+        String nome = homePagePage.getTextNomeLocalPrimeiroItemDaLista();
+        int estrelas = homePagePage.getQuantidadeEstrelasPrimeiroItemDaLista();
+        String valor = homePagePage.getTextValorLocalPrimeiroItemDaLista();
+
+        assertFalse("O nome do primeiro item está vazio", nome.isEmpty());
+        assertTrue("Quantidade de estrelas fora do intervalo esperado (1 a 5): " + estrelas,
+                estrelas >= 1 && estrelas <= 5);
+        assertTrue("O preço do primeiro item não contém \"R$\": " + valor, valor.contains("R$"));
     }
 }

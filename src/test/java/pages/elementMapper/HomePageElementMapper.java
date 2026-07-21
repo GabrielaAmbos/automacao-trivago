@@ -5,28 +5,22 @@ import org.openqa.selenium.support.FindBy;
 
 public class HomePageElementMapper {
 
-    @FindBy(id = "querytext")
+    @FindBy(css = "[data-testid='search-form-input']")
     public WebElement campoDestino;
 
-    @FindBy(css = ".search-button")
+    @FindBy(css = "[data-testid='search-button-with-loader']")
     public WebElement botaoPesquisa;
 
-    @FindBy(css = "#mf-select-sortby")
-    public WebElement comboBoxOrdenarPor;
+    @FindBy(css = "button[name='sorting-filter']")
+    public WebElement botaoOrdenarPor;
 
-    @FindBy(xpath = "//button[@class='df_overlay_close_wrap overlay__close']")
-    public WebElement buttonFecharCalendario;
+    @FindBy(css = "[data-testid='accommodation-list-element']")
+    public WebElement primeiroItemDaLista;
 
-    @FindBy(xpath = "//button[@data-qa='close-map-button']")
-    public WebElement buttonFecharMapa;
-
-    @FindBy(xpath = "(//div[@class='pos-relative item__wrapper']//span[@class='item-link name__copytext'])[1]")
+    @FindBy(css = "[data-testid='accommodation-list-element'] [data-testid='item-name-link']")
     public WebElement nomeLocalPrimeiroItemDaLista;
 
-    @FindBy(xpath = "(//div[@class='stars-wrp']//meta[@itemprop='ratingValue'])[1]")
-    public WebElement quantidadeEstrelasPrimeiroItemDaLista;
-
-    @FindBy(xpath = "(//strong[@data-qa='recommended-price'])[1]")
+    @FindBy(css = "[data-testid='accommodation-list-element'] [data-testid='expected-price']")
     public WebElement valorLocalPrimeiroItemDaLista;
 
 }
