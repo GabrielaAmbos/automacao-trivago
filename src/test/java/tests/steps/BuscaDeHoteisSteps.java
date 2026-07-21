@@ -38,6 +38,12 @@ public class BuscaDeHoteisSteps {
         homePagePage.selectComboBoxOrdenarPor(criterio);
     }
 
+    @Quando("eu busco hotéis em {string} ordenados pela melhor avaliação")
+    public void euBuscoHoteisEmOrdenadosPelaMelhorAvaliacao(String destino) {
+        homePagePage.pesquisaSimples(destino);
+        homePagePage.selectComboBoxOrdenarPor("Avaliação e sugestões");
+    }
+
     @Quando("eu busco hotéis em {string}")
     public void euBuscoHoteisEm(String destino) {
         homePagePage.pesquisaSimples(destino);
