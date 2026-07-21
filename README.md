@@ -75,23 +75,57 @@ Os relatórios de execução ficam em `target/surefire-reports/`. Em caso de fal
 
 ## 📋 Cenários atendidos
 
-**Funcionalidade:** Buscar por um local
-_Como um usuário, desejo consultar um local para visualizar os dados completos do local que estou buscando._
+**Funcionalidade:** Busca de hotéis
+_Como um usuário, desejo pesquisar, ordenar e filtrar hotéis por destino para visualizar os dados completos das opções que estou buscando._
+
+Os cenários estão em [`BuscaDeHoteis.feature`](src/test/java/tests/features/BuscaDeHoteis.feature), agrupados por tema:
+
+### Ordenação
+- Buscar hotéis em Manaus **ordenados por avaliação** e validar os dados do primeiro item;
+- Ordenar os resultados por **diferentes critérios** (Estadias em destaque, Avaliação e sugestões, Preço e sugestões, Melhores avaliações de hóspedes).
+
+### Autocomplete
+- O autocomplete **sugere destinos** ao digitar;
+- **Selecionar um destino** a partir da lista de sugestões e pesquisar.
+
+### Busca por diferentes destinos
+- Buscar hotéis em **vários destinos** (São Paulo, Gramado, Fortaleza) e confirmar que há resultados.
+
+### Filtros
+- Filtrar resultados por **classificação de estrelas**;
+- Filtrar resultados por **avaliação mínima dos hóspedes** (8,0+);
+- **Remover** o filtro de estrelas mantendo a lista de resultados.
+
+### Fluxos negativos
+- Buscar por um texto **sem destino correspondente** exibe apenas a busca livre;
+- Tentar pesquisar **sem informar um destino** mantém o usuário na página inicial.
+
+### Detalhe do resultado
+- O primeiro resultado exibe **preço no formato de moeda brasileira** (R$);
+- **Cada hotel** da lista exibe nome, avaliação e preço.
+
+**Exemplo (cenário principal):**
 
 ```gherkin
-Cenário: Buscar por hotéis em Manaus ordenados por avaliação
-    Dado que eu acesse o site da Trivago
-    Quando eu solicito pesquisar pelo destino "Manaus"
-    E ordeno a pesquisa por "Avaliação e sugestões"
-    Então eu vejo os resultados da busca pelo destino "Manaus"
-    E o primeiro item da lista possui nome, quantidade de estrelas e preço
+Cenário: Buscar hotéis ordenados por avaliação
+    Dado que eu esteja na Trivago
+    Quando eu busco hotéis em "Manaus" ordenados por "Avaliação e sugestões"
+    Então vejo hotéis disponíveis em "Manaus"
+    E o primeiro hotel apresenta nome, classificação e preço
 ```
 
-**O que é validado:**
-- A busca leva à página de resultados do destino pesquisado (Manaus);
-- O primeiro hotel da lista possui **nome**, **classificação em estrelas** (entre 1 e 5) e **preço**.
+> 📝 Os cenários seguem um estilo **declarativo** (descrevem a intenção — _"busco hotéis em Manaus"_) em vez de imperativo (_"digito no campo", "clico no botão"_). A mecânica de UI fica encapsulada nos step definitions e nos Page Objects.
 
 > ℹ️ As asserções são **estruturais** (presença e formato dos dados), e não valores fixos de hotel/preço. Como o Trivago é um site ao vivo, o hotel em primeiro lugar e os preços mudam diariamente — validar valores exatos tornaria o teste instável.
+
+### Cenários de backlog (`@backlog`)
+Alguns cenários ainda **não têm step definitions** por serem naturalmente frágeis contra o site ao vivo (comparação de preço crescente, hóspedes/quartos e seleção de datas). Eles ficam marcados com a tag `@backlog`. Para rodar **apenas os cenários implementados**:
+
+```bash
+mvn test -Dcucumber.filter.tags="not @backlog"
+```
+
+> ⚠️ Como o teste roda contra o Trivago real (com proteção anti-bot), executar **muitos cenários em sequência** pode acionar limitação (throttling) da API de autocomplete e causar falhas intermitentes. Rodar por grupos (`-Dcucumber.filter.name="..."`) ou aguardar entre execuções grandes ajuda a evitar isso.
 
 ## 📁 Estrutura do projeto
 

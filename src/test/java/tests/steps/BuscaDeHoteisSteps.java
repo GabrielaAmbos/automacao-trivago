@@ -12,65 +12,66 @@ public class BuscaDeHoteisSteps {
 
     HomePagePageObjects homePagePage = new HomePagePageObjects();
 
-    // ==================== Dado ====================
+    // ==================== Contexto (Dado) ====================
 
-    @Dado("que eu acesse o site da Trivago")
-    public void queEuAcesseOSiteDaTrivago() {
+    @Dado("que eu esteja na Trivago")
+    public void queEuEstejaNaTrivago() {
         Browser.loadApplication(UrlProvider.getBaseUrl());
     }
 
-    // ==================== Quando ====================
-
-    @Quando("eu solicito pesquisar pelo destino {string}")
-    public void euSolicitoPesquisarPeloDestino(String nomeDestino) {
-        homePagePage.pesquisaSimples(nomeDestino);
+    @Dado("que eu tenha buscado hotéis em {string}")
+    public void queEuTenhaBuscadoHoteisEm(String destino) {
+        Browser.loadApplication(UrlProvider.getBaseUrl());
+        homePagePage.pesquisaSimples(destino);
     }
 
-    @Quando("eu digito {string} no campo de destino")
-    public void euDigitoNoCampoDeDestino(String texto) {
-        homePagePage.digitarNoCampoDestino(texto);
+    @Dado("que eu tenha filtrado por hotéis de {string}")
+    public void queEuTenhaFiltradoPorHoteisDe(String filtro) {
+        homePagePage.filtrarPorEstrelas(quantidadeDeEstrelas(filtro));
     }
 
-    @Quando("eu aciono o botão de pesquisa sem informar um destino")
-    public void euAcionoOBotaoDePesquisaSemInformarUmDestino() {
-        homePagePage.pesquisarSemDestino();
+    // ==================== Ações (Quando) ====================
+
+    @Quando("eu busco hotéis em {string} ordenados por {string}")
+    public void euBuscoHoteisEmOrdenadosPor(String destino, String criterio) {
+        homePagePage.pesquisaSimples(destino);
+        homePagePage.selectComboBoxOrdenarPor(criterio);
     }
 
-    @E("ordeno a pesquisa por {string}")
-    public void ordenoAPesquisaPor(String opcao) {
-        homePagePage.selectComboBoxOrdenarPor(opcao);
+    @Quando("eu busco hotéis em {string}")
+    public void euBuscoHoteisEm(String destino) {
+        homePagePage.pesquisaSimples(destino);
     }
 
-    @E("seleciono a sugestão {string}")
-    public void selecionoASugestao(String destino) {
-        homePagePage.clicarSugestao(destino);
+    @Quando("eu informo o destino {string}")
+    public void euInformoODestino(String destino) {
+        homePagePage.digitarNoCampoDestino(destino);
     }
 
-    @E("confirmo a pesquisa")
-    public void confirmoAPesquisa() {
-        homePagePage.confirmarPesquisa();
+    @Quando("eu filtro por hotéis de {string}")
+    public void euFiltroPorHoteisDe(String filtro) {
+        homePagePage.filtrarPorEstrelas(quantidadeDeEstrelas(filtro));
     }
 
-    @E("filtro os resultados por {string}")
-    public void filtroOsResultadosPor(String filtro) {
-        int estrelas = Integer.parseInt(filtro.replaceAll("\\D+", ""));
-        homePagePage.filtrarPorEstrelas(estrelas);
-    }
-
-    @E("filtro os resultados por avaliação {string}")
-    public void filtroOsResultadosPorAvaliacao(String rotulo) {
+    @Quando("eu filtro por avaliação mínima {string}")
+    public void euFiltroPorAvaliacaoMinima(String rotulo) {
         homePagePage.filtrarPorAvaliacaoMinima(rotulo);
     }
 
-    @E("removo todos os filtros aplicados")
-    public void removoTodosOsFiltrosAplicados() {
+    @Quando("eu removo os filtros aplicados")
+    public void euRemovoOsFiltrosAplicados() {
         homePagePage.removerFiltrosDeEstrelas();
     }
 
-    // ==================== Então ====================
+    @Quando("eu tento buscar sem informar um destino")
+    public void euTentoBuscarSemInformarUmDestino() {
+        homePagePage.pesquisarSemDestino();
+    }
 
-    @Então("eu vejo os resultados da busca pelo destino {string}")
-    public void euVejoOsResultadosDaBuscaPeloDestino(String destino) {
+    // ==================== Verificações (Então) ====================
+
+    @Então("vejo hotéis disponíveis em {string}")
+    public void vejoHoteisDisponiveisEm(String destino) {
         String url = homePagePage.getUrlAtual().toLowerCase();
         String titulo = homePagePage.getTituloAtual().toLowerCase();
         String esperado = destino.toLowerCase();
@@ -80,38 +81,39 @@ public class BuscaDeHoteisSteps {
                 url.contains(esperado) || titulo.contains(esperado));
     }
 
-    @E("o primeiro item da lista possui nome, quantidade de estrelas e preço")
-    public void oPrimeiroItemDaListaPossuiNomeQuantidadeDeEstrelasEPreco() {
+    @Então("o primeiro hotel apresenta nome, classificação e preço")
+    public void oPrimeiroHotelApresentaNomeClassificacaoEPreco() {
         String nome = homePagePage.getTextNomeLocalPrimeiroItemDaLista();
         int estrelas = homePagePage.getQuantidadeEstrelasPrimeiroItemDaLista();
         String valor = homePagePage.getTextValorLocalPrimeiroItemDaLista();
 
-        assertFalse("O nome do primeiro item está vazio", nome.isEmpty());
-        assertTrue("Quantidade de estrelas fora do intervalo esperado (1 a 5): " + estrelas,
+        assertFalse("O nome do primeiro hotel está vazio", nome.isEmpty());
+        assertTrue("Classificação em estrelas fora do intervalo esperado (1 a 5): " + estrelas,
                 estrelas >= 1 && estrelas <= 5);
-        assertTrue("O preço do primeiro item não contém \"R$\": " + valor, valor.contains("R$"));
+        assertTrue("O preço do primeiro hotel não contém \"R$\": " + valor, valor.contains("R$"));
     }
 
-    @Então("vejo uma sugestão de destino contendo {string}")
-    public void vejoUmaSugestaoDeDestinoContendo(String texto) {
+    @Então("recebo {string} entre as sugestões de destino")
+    public void receboEntreAsSugestoesDeDestino(String texto) {
         assertTrue("Nenhuma sugestão de destino contendo \"" + texto + "\" foi exibida",
                 homePagePage.existeSugestaoDeDestino(texto));
     }
 
-    @Então("vejo a opção de busca livre")
-    public void vejoAOpcaoDeBuscaLivre() {
+    @Então("recebo a opção de busca livre")
+    public void receboAOpcaoDeBuscaLivre() {
         assertTrue("A opção de busca livre não foi exibida", homePagePage.existeOpcaoDeBuscaLivre());
     }
 
-    @E("não vejo nenhuma sugestão de cidade")
-    public void naoVejoNenhumaSugestaoDeCidade() {
+    @Então("não recebo sugestões de cidade")
+    public void naoReceboSugestoesDeCidade() {
         assertFalse("Não era esperada nenhuma sugestão de cidade", homePagePage.existeSugestaoDeCidade());
     }
 
-    @Então("permaneço na página inicial com o campo de destino em destaque")
-    public void permanecoNaPaginaInicialComOCampoDeDestinoEmDestaque() {
+    @Então("permaneço na página inicial para informar o destino")
+    public void permanecoNaPaginaInicialParaInformarODestino() {
         assertTrue("Esperava permanecer na página inicial", homePagePage.estaNaPaginaInicial());
-        assertTrue("Esperava o campo de destino focado", homePagePage.campoDestinoEstaFocado());
+        assertTrue("Esperava o campo de destino em foco para informar o destino",
+                homePagePage.campoDestinoEstaFocado());
     }
 
     @Então("todos os hotéis exibidos possuem {int} estrelas")
@@ -120,40 +122,41 @@ public class BuscaDeHoteisSteps {
                 homePagePage.todosOsHoteisPossuemEstrelas(quantidade));
     }
 
-    @Então("todos os hotéis exibidos possuem avaliação igual ou superior a 8,0")
-    public void todosOsHoteisExibidosPossuemAvaliacaoMinima() {
-        assertTrue("Nem todos os hotéis exibidos possuem avaliação >= 8,0",
+    @Então("todos os hotéis exibidos têm avaliação a partir de 8,0")
+    public void todosOsHoteisExibidosTemAvaliacaoAPartirDe() {
+        assertTrue("Nem todos os hotéis exibidos têm avaliação a partir de 8,0",
                 homePagePage.todosOsHoteisPossuemAvaliacaoMinima(8.0));
     }
 
-    @Então("o filtro de estrelas não está mais ativo")
-    public void oFiltroDeEstrelasNaoEstaMaisAtivo() {
+    @Então("nenhum filtro de estrelas permanece ativo")
+    public void nenhumFiltroDeEstrelasPermaneceAtivo() {
         for (int q = 1; q <= 5; q++) {
             assertFalse("O filtro de " + q + " estrelas ainda está ativo",
                     homePagePage.filtroEstrelasEstaAtivo(q));
         }
     }
 
-    @E("a lista de resultados continua sendo exibida")
-    public void aListaDeResultadosContinuaSendoExibida() {
-        assertTrue("A lista de resultados não está mais sendo exibida",
+    @Então("continuo vendo hotéis disponíveis")
+    public void continuoVendoHoteisDisponiveis() {
+        assertTrue("A lista de hotéis não está mais sendo exibida",
                 homePagePage.getQuantidadeResultados() >= 1);
     }
 
-    @E("a lista de resultados possui pelo menos um hotel")
-    public void aListaDeResultadosPossuiPeloMenosUmHotel() {
-        assertTrue("A lista de resultados está vazia", homePagePage.getQuantidadeResultados() >= 1);
-    }
-
-    @Então("o preço do primeiro item está no formato {string}")
-    public void oPrecoDoPrimeiroItemEstaNoFormato(String formato) {
+    @Então("o preço do primeiro hotel é exibido em reais")
+    public void oPrecoDoPrimeiroHotelEExibidoEmReais() {
         String valor = homePagePage.getTextValorLocalPrimeiroItemDaLista();
-        assertTrue("O preço \"" + valor + "\" não contém \"" + formato + "\"", valor.contains(formato));
+        assertTrue("O preço \"" + valor + "\" não está em reais (R$)", valor.contains("R$"));
     }
 
-    @Então("cada hotel exibido possui nome, avaliação e preço")
-    public void cadaHotelExibidoPossuiNomeAvaliacaoEPreco() {
-        assertTrue("Nem todos os hotéis exibidos possuem nome, avaliação e preço",
+    @Então("cada hotel exibido apresenta nome, avaliação e preço")
+    public void cadaHotelExibidoApresentaNomeAvaliacaoEPreco() {
+        assertTrue("Nem todos os hotéis exibidos apresentam nome, avaliação e preço",
                 homePagePage.cadaHotelExibeNomeAvaliacaoEPreco());
+    }
+
+    // ==================== Helpers ====================
+
+    private int quantidadeDeEstrelas(String filtro) {
+        return Integer.parseInt(filtro.replaceAll("\\D+", ""));
     }
 }
