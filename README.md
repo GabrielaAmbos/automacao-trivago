@@ -109,12 +109,12 @@ Os cenários estão em [`BuscaDeHoteis.feature`](src/test/java/tests/features/Bu
 ```gherkin
 Cenário: Buscar hotéis ordenados por avaliação
     Dado que eu esteja na Trivago
-    Quando eu busco hotéis em "Manaus" ordenados por "Avaliação e sugestões"
+    Quando eu busco hotéis em "Manaus" ordenados pela melhor avaliação
     Então vejo hotéis disponíveis em "Manaus"
     E o primeiro hotel apresenta nome, classificação e preço
 ```
 
-> 📝 Os cenários seguem um estilo **declarativo** (descrevem a intenção — _"busco hotéis em Manaus"_) em vez de imperativo (_"digito no campo", "clico no botão"_). A mecânica de UI fica encapsulada nos step definitions e nos Page Objects.
+> 📝 Os cenários seguem um estilo **declarativo** (descrevem a intenção — _"busco hotéis ordenados pela melhor avaliação"_) em vez de imperativo (_"digito no campo", "clico no botão", "seleciono a opção X do dropdown"_). A mecânica de UI — incluindo o rótulo exato da opção de ordenação — fica encapsulada nos step definitions e nos Page Objects.
 
 > ℹ️ As asserções são **estruturais** (presença e formato dos dados), e não valores fixos de hotel/preço. Como o Trivago é um site ao vivo, o hotel em primeiro lugar e os preços mudam diariamente — validar valores exatos tornaria o teste instável.
 
