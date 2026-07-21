@@ -78,8 +78,11 @@ public class HomePagePageObjects extends HomePageElementMapper {
                 .until(ExpectedConditions.presenceOfElementLocated(ITEM_LISTA));
     }
 
+    private String ultimoTermoDigitado = "";
+
     // digita no campo sem selecionar sugestao (para cenarios de autocomplete/negativos)
     public void digitarNoCampoDestino(String texto) {
+        ultimoTermoDigitado = texto;
         wait.until(ExpectedConditions.elementToBeClickable(campoDestino));
         limparCampo(campoDestino);
         digitarDevagar(campoDestino, texto);
@@ -118,7 +121,20 @@ public class HomePagePageObjects extends HomePageElementMapper {
     }
 
     public boolean existeOpcaoDeBuscaLivre() {
-        return !driver.findElements(By.cssSelector("[data-testid='ssg-element-free-search']")).isEmpty();
+        By buscaLivre = By.cssSelector("[data-testid='ssg-element-free-search']");
+        // a lista de sugestoes pode ficar carregando (throttle); recarrega e redigita se preciso
+        for (int tentativa = 0; tentativa < 3; tentativa++) {
+            try {
+                new WebDriverWait(driver, Duration.ofSeconds(10))
+                        .until(ExpectedConditions.visibilityOfElementLocated(buscaLivre));
+                return true;
+            } catch (TimeoutException e) {
+                if (tentativa == 2) return false;
+                recarregar(tentativa);
+                digitarNoCampoDestino(ultimoTermoDigitado);
+            }
+        }
+        return false;
     }
 
     public boolean existeSugestaoDeCidade() {
