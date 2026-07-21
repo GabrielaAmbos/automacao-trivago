@@ -104,9 +104,9 @@ src/test/java/
 │       └── HomePagePageObjects.java     # Ações na página (Page Object Model)
 ├── tests/
 │   ├── features/
-│   │   └── BuscaPorDestino.feature      # Cenários em Gherkin (português)
+│   │   └── BuscaDeHoteis.feature        # Cenários em Gherkin (português)
 │   ├── steps/
-│   │   └── BuscaPorDestinoSteps.java    # Ligação Gherkin ↔ código
+│   │   └── BuscaDeHoteisSteps.java      # Ligação Gherkin ↔ código
 │   ├── hooks/
 │   │   └── Hooks.java                   # Setup/teardown do navegador
 │   └── RunTests.java                    # Runner do Cucumber

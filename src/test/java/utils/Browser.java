@@ -1,5 +1,6 @@
 package utils;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.edge.*;
@@ -58,7 +59,13 @@ public class Browser {
                         driver = new FirefoxDriver(firefoxOptions);
                         break;
                 }
-                driver.manage().window().maximize();
+                // Em headless o maximize() encolhe a janela e esconde a barra lateral de
+                // filtros (layout mobile); por isso fixamos uma resolucao desktop.
+                if (isHeadless) {
+                    driver.manage().window().setSize(new Dimension(1920, 1080));
+                } else {
+                    driver.manage().window().maximize();
+                }
                 // Sem implicit wait: os Page Objects usam explicit waits (WebDriverWait).
                 // Misturar implicit + explicit wait quebra o polling do explicit wait.
                 driver.manage().timeouts().implicitlyWait(Duration.ZERO);

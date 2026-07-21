@@ -11,6 +11,13 @@ public class Hooks {
 
     @Before
     public void setUp() {
+        // pequena pausa entre cenários: o autocomplete do Trivago limita (throttle)
+        // requisições automatizadas em sequência; espaçar as buscas reduz falhas.
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         Browser.setCurrentBrowser(Browser.Type.CHROME, isHeadless());
     }
 
