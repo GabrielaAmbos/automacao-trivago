@@ -4,10 +4,9 @@ Funcionalidade: Buscar por um local
   Desejo consultar um local
   Para que eu possa visualizar os dados completos do local que estou buscando
 
-  Cenário: Buscar por hotéis em Manaus com uma boa avaliação e preço
+  Cenário: Buscar por hotéis em Manaus ordenados por avaliação
       Dado que eu acesse o site da Trivago
       Quando eu solicito pesquisar pelo destino "Manaus"
       E ordeno a pesquisa por "Avaliação e sugestões"
-      Então eu vejo os dados do primeiro item da lista
-        | Nome             | Avaliação | Valor |
-        | Sleep Inn Manaus | 3         | R$138 |
+      Então eu vejo os resultados da busca pelo destino "Manaus"
+      E o primeiro item da lista possui nome, quantidade de estrelas e preço

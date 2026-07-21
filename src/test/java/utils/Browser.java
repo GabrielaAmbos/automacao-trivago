@@ -5,13 +5,12 @@ import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.edge.*;
 import org.openqa.selenium.firefox.*;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class Browser {
     private static WebDriver driver;
     private static Type currentType;
     private static Boolean isHeadless = false;
-    private static String userDir = System.getProperty("user.dir");
 
     public enum Type {
         FIREFOX,
@@ -36,10 +35,11 @@ public class Browser {
                 switch (getCurrentBrowser()) {
                     case CHROME:
                         ChromeOptions chromeOptions = new ChromeOptions();
-                        if(isHeadless) chromeOptions.addArguments("--headless");
-                        chromeOptions.setCapability("download.prompt_for_download", false);
-                        chromeOptions.setCapability("disable-popup-blocking", "true");
-                        System.setProperty("webdriver.chrome.driver", userDir+"\\chromedriver.exe");
+                        if(isHeadless) {
+                            chromeOptions.addArguments("--headless=new");
+                            // garante layout desktop no headless (senao abre em resolucao pequena)
+                            chromeOptions.addArguments("--window-size=1920,1080");
+                        }
                         driver = new ChromeDriver(chromeOptions);
                         break;
                     case EDGE:
@@ -50,7 +50,6 @@ public class Browser {
                     case FIREFOX:
                         FirefoxOptions firefoxOptions = new FirefoxOptions();
                         if(isHeadless) firefoxOptions.addArguments("--headless");
-                        System.setProperty("webdriver.gecko.driver", userDir+"\\geckodriver.exe");
                         firefoxOptions.setCapability("browser.download.folderList", 2);
                         firefoxOptions.setCapability("browser.download.useDownloadDir", true);
                         firefoxOptions.setCapability("browser.download.viewableInternally.enabledTypes", "");
@@ -60,8 +59,10 @@ public class Browser {
                         break;
                 }
                 driver.manage().window().maximize();
-                driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-                driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+                // Sem implicit wait: os Page Objects usam explicit waits (WebDriverWait).
+                // Misturar implicit + explicit wait quebra o polling do explicit wait.
+                driver.manage().timeouts().implicitlyWait(Duration.ZERO);
+                driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
             } catch (Exception e) {
                 e.printStackTrace();
             }
