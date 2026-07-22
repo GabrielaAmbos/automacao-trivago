@@ -5,6 +5,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import utils.Browser;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 public class Hooks {
@@ -18,10 +19,23 @@ public class Hooks {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        Browser.setCurrentBrowser(Browser.Type.CHROME, isHeadless());
+        Browser.setCurrentBrowser(navegador(), isHeadless());
     }
 
-    // headless por padrao; desative com HEADLESS=false (env) ou -Dheadless=false (system property)
+    // navegador via -Dbrowser=<chrome|firefox|edge> ou BROWSER=<...>; padrão: chrome
+    private Browser.Type navegador() {
+        String valor = System.getProperty("browser");
+        if (valor == null) valor = System.getenv("BROWSER");
+        if (valor == null) return Browser.Type.CHROME;
+        try {
+            return Browser.Type.valueOf(valor.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Navegador inválido: \"" + valor + "\". Use chrome, firefox ou edge.");
+        }
+    }
+
+    // headless por padrão; desative com HEADLESS=false (env) ou -Dheadless=false (system property)
     private boolean isHeadless() {
         String valor = System.getProperty("headless");
         if (valor == null) valor = System.getenv("HEADLESS");
@@ -35,9 +49,14 @@ public class Hooks {
             try {
                 System.out.println("[DEBUG] URL no momento da falha: " + Browser.getCurrentDriver().getCurrentUrl());
                 byte[] png = ((TakesScreenshot) Browser.getCurrentDriver()).getScreenshotAs(OutputType.BYTES);
-                String out = "/private/tmp/claude-501/-Users-gabrielaambos-Documents-GitHub-automacao-trivago/e793d859-3b70-4a5e-bc24-64bf05373f7e/scratchpad/falha.png";
-                try (FileOutputStream fos = new FileOutputStream(out)) { fos.write(png); }
-                System.out.println("[DEBUG] Screenshot salvo em: " + out);
+                File dir = new File("target/screenshots");
+                dir.mkdirs();
+                String nome = scenario.getName().replaceAll("[^a-zA-Z0-9-_]+", "_");
+                File destino = new File(dir, nome + ".png");
+                try (FileOutputStream fos = new FileOutputStream(destino)) {
+                    fos.write(png);
+                }
+                System.out.println("[DEBUG] Screenshot salvo em: " + destino.getPath());
             } catch (Exception e) {
                 System.out.println("[DEBUG] Falha ao capturar screenshot: " + e.getMessage());
             }
