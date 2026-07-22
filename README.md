@@ -1,34 +1,39 @@
+<div align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=DF62F7&width=435&lines=Projeto+de+Automa%C3%A7%C3%A3o+Trivago)](https://git.io/typing-svg)
+**🇺🇸 English** · [🇧🇷 Português](README.pt-BR.md)
 
-Projeto de automação de testes end-to-end (E2E) no site [trivago.com.br](https://www.trivago.com.br/), explorando a funcionalidade **"Busca por destino"**. Os testes simulam um usuário real navegando pelo site: pesquisam um destino, ordenam os resultados e validam os dados do primeiro hotel da lista.
+</div>
 
-## 🛠️ Tecnologias
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&pause=1000&color=DF62F7&width=435&lines=Trivago+Automation+Project)](https://git.io/typing-svg)
 
-| Ferramenta | Versão | Papel |
-| ---------- | ------ | ----- |
-| **Java** | 17+ | Linguagem |
-| **Maven** | 3.9+ | Build e dependências |
-| **Selenium WebDriver** | 4.27.0 | Automação do navegador |
-| **Selenium Manager** | (embutido no Selenium) | Baixa o driver do navegador automaticamente |
-| **Cucumber (BDD)** | 6.10.4 | Cenários em linguagem natural (Gherkin/PT) |
-| **JUnit** | 4.13.2 | Runner dos testes |
+End-to-end (E2E) test automation project for [trivago.com.br](https://www.trivago.com.br/), covering the **hotel search** feature. The tests simulate a real user browsing the site: they search for a destination, sort the results, apply filters and validate the data of the listed hotels.
 
-> 💡 **Não é preciso baixar o ChromeDriver manualmente.** A partir do Selenium 4.6, o **Selenium Manager** detecta a versão do Chrome instalada e baixa o driver compatível sozinho.
+## 🛠️ Tech stack
 
-## ✅ Pré-requisitos
+| Tool | Version | Role |
+| ---- | ------- | ---- |
+| **Java** | 17+ | Language |
+| **Maven** | 3.9+ | Build & dependencies |
+| **Selenium WebDriver** | 4.27.0 | Browser automation |
+| **Selenium Manager** | (bundled with Selenium) | Downloads the browser driver automatically |
+| **Cucumber (BDD)** | 6.10.4 | Scenarios in natural language (Gherkin/PT) |
+| **JUnit** | 4.13.2 | Test runner |
 
-- **JDK 17 ou superior**
-- **Maven 3.9 ou superior**
-- **Google Chrome** instalado
+> 💡 **No need to download ChromeDriver manually.** Since Selenium 4.6, **Selenium Manager** detects the installed Chrome version and downloads the matching driver on its own.
 
-### Instalação no macOS (via [Homebrew](https://brew.sh))
+## ✅ Prerequisites
+
+- **JDK 17 or higher**
+- **Maven 3.9 or higher**
+- **Google Chrome** installed
+
+### macOS setup (via [Homebrew](https://brew.sh))
 
 ```bash
 brew install openjdk@21 maven
 ```
 
-Como o OpenJDK do Homebrew é *keg-only*, adicione ao seu `~/.zshrc` para o `java`/`mvn` ficarem disponíveis no terminal:
+Homebrew's OpenJDK is *keg-only*, so add it to your `~/.zshrc` to make `java`/`mvn` available in the terminal:
 
 ```bash
 echo 'export JAVA_HOME="/usr/local/opt/openjdk@21"' >> ~/.zshrc
@@ -36,75 +41,87 @@ echo 'export PATH="$JAVA_HOME/bin:/usr/local/opt/maven/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-> Em Apple Silicon (M1/M2/M3), o Homebrew instala em `/opt/homebrew` — ajuste os caminhos para `/opt/homebrew/opt/openjdk@21`.
+> On Apple Silicon (M1/M2/M3), Homebrew installs under `/opt/homebrew` — adjust the paths to `/opt/homebrew/opt/openjdk@21`.
 
-Verifique a instalação:
+Verify the installation:
 
 ```bash
-java -version   # deve mostrar 21.x
-mvn -version    # deve mostrar 3.9.x
+java -version   # should show 21.x
+mvn -version    # should show 3.9.x
 ```
 
-## ▶️ Como executar
+## ▶️ How to run
 
-Na raiz do projeto:
+From the project root:
 
 ```bash
 mvn test
 ```
 
-Isso baixa as dependências (na 1ª vez), inicia o Chrome, executa o cenário e fecha o navegador ao final.
+This downloads the dependencies (on the first run), launches Chrome, runs the scenario and closes the browser at the end.
 
-### Modo headless (com ou sem janela)
+### Headless mode (with or without a window)
 
-Por padrão os testes rodam em **modo headless** (sem abrir janela do navegador). Para **ver** o navegador durante a execução:
+By default the tests run in **headless mode** (no browser window). To **watch** the browser during execution:
 
 ```bash
 HEADLESS=false mvn test
-# ou
+# or
 mvn test -Dheadless=false
 ```
 
-| Comando | Comportamento |
-| ------- | ------------- |
-| `mvn test` | Headless (sem janela) — **padrão** |
-| `HEADLESS=false mvn test` | Abre a janela do Chrome |
-| `mvn test -Dheadless=false` | Abre a janela do Chrome |
+| Command | Behavior |
+| ------- | -------- |
+| `mvn test` | Headless (no window) — **default** |
+| `HEADLESS=false mvn test` | Opens the browser window |
+| `mvn test -Dheadless=false` | Opens the browser window |
 
-Os relatórios de execução ficam em `target/surefire-reports/`. Em caso de falha, um screenshot do momento do erro é salvo automaticamente para facilitar o diagnóstico.
+### Choosing the browser
 
-## 📋 Cenários atendidos
+By default the tests run on **Chrome**. To use another browser:
 
-**Funcionalidade:** Busca de hotéis
-_Como um usuário, desejo pesquisar, ordenar e filtrar hotéis por destino para visualizar os dados completos das opções que estou buscando._
+| Command | Browser |
+| ------- | ------- |
+| `mvn test` | Chrome (default) |
+| `mvn test -Dbrowser=firefox` | Firefox |
+| `mvn test -Dbrowser=edge` | Edge |
 
-Os cenários estão em [`BuscaDeHoteis.feature`](src/test/java/tests/features/BuscaDeHoteis.feature), agrupados por tema:
+You can also use an environment variable: `BROWSER=firefox mvn test`. The chosen browser must be **installed**; Selenium Manager downloads the matching driver automatically. The options combine: `mvn test -Dbrowser=firefox -Dheadless=false`.
 
-### Ordenação
-- Buscar hotéis em Manaus **ordenados por avaliação** e validar os dados do primeiro item;
-- Ordenar os resultados por **diferentes critérios** (Estadias em destaque, Avaliação e sugestões, Preço e sugestões, Melhores avaliações de hóspedes).
+Execution reports are written to `target/surefire-reports/`. On failure, a screenshot of the moment of the error is saved to `target/screenshots/<scenario>.png` to help with debugging.
+
+## 📋 Covered scenarios
+
+**Feature:** Hotel search
+_As a user, I want to search, sort and filter hotels by destination so that I can see the complete data of the options I am looking for._
+
+The scenarios live in [`BuscaDeHoteis.feature`](src/test/java/tests/features/BuscaDeHoteis.feature), grouped by theme:
+
+### Sorting
+- Search hotels in Manaus **sorted by rating** and validate the first item's data;
+- Sort results by **different criteria** (Featured stays, Rating & suggestions, Price & suggestions, Best guest reviews).
 
 ### Autocomplete
-- O autocomplete **sugere destinos** ao digitar;
-- **Selecionar um destino** a partir da lista de sugestões e pesquisar.
+- The autocomplete **suggests destinations** as you type;
+- **Select a destination** from the suggestions list and search.
 
-### Busca por diferentes destinos
-- Buscar hotéis em **vários destinos** (São Paulo, Gramado, Fortaleza) e confirmar que há resultados.
+### Search across different destinations
+- Search hotels in **several destinations** (São Paulo, Gramado, Fortaleza) and confirm there are results.
 
-### Filtros
-- Filtrar resultados por **classificação de estrelas**;
-- Filtrar resultados por **avaliação mínima dos hóspedes** (8,0+);
-- **Remover** o filtro de estrelas mantendo a lista de resultados.
+### Filters
+- Filter results by **star rating**;
+- Filter results by **minimum guest rating** (8.0+);
+- **Remove** the star filter while keeping the results list.
 
-### Fluxos negativos
-- Buscar por um texto **sem destino correspondente** exibe apenas a busca livre;
-- Tentar pesquisar **sem informar um destino** mantém o usuário na página inicial.
+### Negative flows
+- Searching a term **with no matching destination** only offers the free (AI) search;
+- Trying to search **without providing a destination** keeps the user on the home page.
 
-### Detalhe do resultado
-- O primeiro resultado exibe **preço no formato de moeda brasileira** (R$);
-- **Cada hotel** da lista exibe nome, avaliação e preço.
+### Result details
+- The first result shows a **price in Brazilian currency** (R$);
+- **Every hotel** in the list shows name, rating and price.
 
-**Exemplo (cenário principal):**
+**Example (main scenario):**
 
 ```gherkin
 Cenário: Buscar hotéis ordenados por avaliação
@@ -114,45 +131,45 @@ Cenário: Buscar hotéis ordenados por avaliação
     E o primeiro hotel apresenta nome, classificação e preço
 ```
 
-> 📝 Os cenários seguem um estilo **declarativo** (descrevem a intenção — _"busco hotéis em Manaus"_) em vez de imperativo (_"digito no campo", "clico no botão"_). A mecânica de UI fica encapsulada nos step definitions e nos Page Objects.
+> 📝 The scenarios are written in **Portuguese Gherkin** and follow a **declarative** style (they describe intent — _"I search for hotels in Manaus"_) rather than imperative (_"I type in the field", "I click the button"_). UI mechanics are encapsulated in the step definitions and Page Objects.
 
-> ℹ️ As asserções são **estruturais** (presença e formato dos dados), e não valores fixos de hotel/preço. Como o Trivago é um site ao vivo, o hotel em primeiro lugar e os preços mudam diariamente — validar valores exatos tornaria o teste instável.
+> ℹ️ Assertions are **structural** (presence and format of the data), not fixed hotel/price values. Since Trivago is a live site, the top hotel and prices change daily — asserting exact values would make the test flaky.
 
-### Cenários de backlog (`@backlog`)
-Alguns cenários ainda **não têm step definitions** por serem naturalmente frágeis contra o site ao vivo (comparação de preço crescente, hóspedes/quartos e seleção de datas). Eles ficam marcados com a tag `@backlog`. Para rodar **apenas os cenários implementados**:
+### Backlog scenarios (`@backlog`)
+Some scenarios have **no step definitions yet** because they are inherently fragile against the live site (ascending-price comparison, guests/rooms and date selection). They are tagged `@backlog`. To run **only the implemented scenarios**:
 
 ```bash
 mvn test -Dcucumber.filter.tags="not @backlog"
 ```
 
-> ⚠️ Como o teste roda contra o Trivago real (com proteção anti-bot), executar **muitos cenários em sequência** pode acionar limitação (throttling) da API de autocomplete e causar falhas intermitentes. Rodar por grupos (`-Dcucumber.filter.name="..."`) ou aguardar entre execuções grandes ajuda a evitar isso.
+> ⚠️ Since the tests run against the real Trivago (with anti-bot protection), running **many scenarios in a row** may trigger throttling of the autocomplete API and cause intermittent failures. Running by groups (`-Dcucumber.filter.name="..."`) or waiting between large runs helps avoid this.
 
-## 📁 Estrutura do projeto
+## 📁 Project structure
 
 ```
 src/test/java/
 ├── pages/
 │   ├── elementMapper/
-│   │   └── HomePageElementMapper.java   # Mapeamento dos elementos (seletores)
+│   │   └── HomePageElementMapper.java   # Element mapping (selectors)
 │   └── pageObjects/
-│       └── HomePagePageObjects.java     # Ações na página (Page Object Model)
+│       └── HomePagePageObjects.java     # Page actions (Page Object Model)
 ├── tests/
 │   ├── features/
-│   │   └── BuscaDeHoteis.feature        # Cenários em Gherkin (português)
+│   │   └── BuscaDeHoteis.feature        # Gherkin scenarios (Portuguese)
 │   ├── steps/
-│   │   └── BuscaDeHoteisSteps.java      # Ligação Gherkin ↔ código
+│   │   └── BuscaDeHoteisSteps.java      # Gherkin ↔ code glue
 │   ├── hooks/
-│   │   └── Hooks.java                   # Setup/teardown do navegador
-│   └── RunTests.java                    # Runner do Cucumber
+│   │   └── Hooks.java                   # Browser setup/teardown
+│   └── RunTests.java                    # Cucumber runner
 └── utils/
-    ├── Browser.java                     # Gerência do WebDriver (Chrome/Firefox/Edge)
+    ├── Browser.java                     # WebDriver management (Chrome/Firefox/Edge)
     └── providers/
-        └── UrlProvider.java             # URL base da aplicação
+        └── UrlProvider.java             # Application base URL
 ```
 
-O projeto segue o padrão **Page Object Model (POM)**, separando o mapeamento de elementos, as ações de página e os passos de teste.
+The project follows the **Page Object Model (POM)** pattern, separating element mapping, page actions and test steps.
 
-## ⚠️ Observações
+## ⚠️ Notes
 
-- O teste roda contra o **site real do Trivago**, que possui proteção anti-bot. Em execuções muito repetidas em sequência, a API de autocomplete do site pode limitar (throttle) as requisições e retornar resultados vazios. O projeto já trata isso com *retry* e recarga da página, mas se ocorrer uma falha isolada, aguarde cerca de 1 minuto e execute novamente.
-- O navegador padrão é o **Chrome**. O suporte a Firefox e Edge também está implementado em [`Browser.java`](src/test/java/utils/Browser.java).
+- The tests run against the **real Trivago site**, which has anti-bot protection. On many repeated back-to-back runs, the site's autocomplete API may throttle requests and return empty results. The project already handles this with *retry* and page reload, but if an isolated failure happens, wait about 1 minute and run again.
+- The default browser is **Chrome**. Firefox and Edge are also supported via `-Dbrowser` (see [Choosing the browser](#choosing-the-browser)).
