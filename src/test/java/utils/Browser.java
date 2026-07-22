@@ -45,7 +45,7 @@ public class Browser {
                         break;
                     case EDGE:
                         EdgeOptions edgeOptions = new EdgeOptions();
-                        if(isHeadless) edgeOptions.addArguments("headless");
+                        if(isHeadless) edgeOptions.addArguments("--headless=new");
                         driver = new EdgeDriver(edgeOptions);
                         break;
                     case FIREFOX:
