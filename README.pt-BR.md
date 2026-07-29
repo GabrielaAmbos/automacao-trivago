@@ -90,6 +90,12 @@ Também por variável de ambiente: `BROWSER=firefox mvn test`. O navegador escol
 
 Os relatórios de execução ficam em `target/surefire-reports/`. Em caso de falha, um screenshot do momento do erro é salvo em `target/screenshots/<cenário>.png` para facilitar o diagnóstico.
 
+## 📊 Última execução
+
+O relatório da última execução — com tempo por cenário e **prints das falhas** — está salvo em [`docs/relatorio-execucao.html`](docs/relatorio-execucao.html) ([abrir renderizado](https://htmlpreview.github.io/?https://github.com/GabrielaAmbos/automacao-trivago/blob/main/docs/relatorio-execucao.html)).
+
+> **22 jul 2026 · 10 sucesso · 7 erro · 6 min 35 s** (Chrome, headless). As falhas vieram de instabilidade do site ao vivo — um overlay de login flutuante cobrindo o campo de busca e throttling do autocomplete — e não da lógica dos testes.
+
 ## 📋 Cenários atendidos
 
 **Funcionalidade:** Busca de hotéis

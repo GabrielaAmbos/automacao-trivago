@@ -90,6 +90,12 @@ You can also use an environment variable: `BROWSER=firefox mvn test`. The chosen
 
 Execution reports are written to `target/surefire-reports/`. On failure, a screenshot of the moment of the error is saved to `target/screenshots/<scenario>.png` to help with debugging.
 
+## 📊 Latest run
+
+The report of the latest execution — with per-scenario timing and **failure screenshots** — is saved at [`docs/relatorio-execucao.html`](docs/relatorio-execucao.html) ([open rendered](https://htmlpreview.github.io/?https://github.com/GabrielaAmbos/automacao-trivago/blob/main/docs/relatorio-execucao.html)).
+
+> **22 Jul 2026 · 10 passed · 7 errors · 6 min 35 s** (Chrome, headless). The failures came from live-site instability — a floating login overlay intercepting the search field, and autocomplete throttling — not from the test logic.
+
 ## 📋 Covered scenarios
 
 **Feature:** Hotel search
