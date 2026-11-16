@@ -8,7 +8,7 @@ Funcionalidade: Busca de hotéis
 
   Cenário: Buscar hotéis ordenados por avaliação
     Dado que eu esteja na Trivago
-    Quando eu busco hotéis em "Manaus" ordenados por "Avaliação e sugestões"
+    Quando eu busco hotéis em "Manaus" ordenados pela melhor avaliação
     Então vejo hotéis disponíveis em "Manaus"
     E o primeiro hotel apresenta nome, classificação e preço
 
